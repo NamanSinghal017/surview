@@ -1,15 +1,86 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<link href="./style.css" type="text/css" rel="stylesheet"/>
-	</head>
-	<body>
-		<h1>My First Heading</h1>
-		<p>My first paragraph.</p>
-		<p>My second paragraph.</p>
-		<p>My third paragraph.</p>
-		<p>My fourth paragraph.</p>
-		<p>My fifth paragraph.</p>
-		<p>My sixth paragraph.</p>
-	</body>
+
+<head>
+	<title>Surview | Naman Singhal</title>
+
+	<link href="./style.css" type="text/css" rel="stylesheet" />
+
+	<!-- Firebase SDK -->
+	<script type="module">
+		// Import the functions you need from the SDKs you need
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+		import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-analytics.js";
+		import { getDatabase, ref, push, onValue } from 'https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js';
+
+		const firebaseConfig = {
+			apiKey: "AIzaSyAhK1Iv4GpHaBeGTaGbCwOPuQKWBxGcQ-U",
+			authDomain: "surview-f2327.firebaseapp.com",
+			databaseURL: "https://surview-f2327-default-rtdb.firebaseio.com",
+			projectId: "surview-f2327",
+			storageBucket: "surview-f2327.appspot.com",
+			messagingSenderId: "207123150741",
+			appId: "1:207123150741:web:385a613a26cf3a323e289c",
+			measurementId: "G-7BZ39VBJS3"
+		};
+
+		// Initialize Firebase
+		const firebaseApp = initializeApp(firebaseConfig);
+		const database = getDatabase(firebaseApp);
+		const analytics = getAnalytics(firebaseApp);
+
+		// Function to submit the survey form
+		const submitForm = () => {
+			const name = document.getElementById("name").value;
+			const age = document.getElementById("age").value;
+			const email = document.getElementById("email").value;
+
+			// Save the data to Firebase Realtime Database
+			push(ref(database, 'surveys'), {
+				name,
+				age,
+				email
+			});
+
+			// Clear the form
+			document.getElementById("name").value = "";
+			document.getElementById("age").value = "";
+			document.getElementById("email").value = "";
+		}
+		
+		// Function to display the survey results
+		const displayResults = () => {
+			const surveysRef = ref(database, 'surveys');
+			onValue(surveysRef, (snapshot) => {
+				const surveys = snapshot.val();
+				const surveyResults = document.getElementById("surveyResults");
+				surveyResults.innerHTML = "";
+				for (const key in surveys) {
+					const survey = surveys[key];
+					surveyResults.innerHTML += `<p>Name: ${survey.name}<br>Age: ${survey.age}<br>Email: ${survey.email}</p>`;
+				}
+			});
+		}
+	</script>
+</head>
+
+<body onload="displayResults();">
+	<h1>Survey Form</h1>
+	<form>
+		<label for="name">Name:</label>
+		<input type="text" id="name"><br><br>
+
+		<label for="age">Age:</label>
+		<input type="number" id="age"><br><br>
+
+		<label for="email">Email:</label>
+		<input type="email" id="email"><br><br>
+
+		<input type="button" value="Submit" onclick="submitForm();">
+	</form>
+
+	<h2>Survey Results</h2>
+	<div id="surveyResults"></div>
+</body>
+
 </html>
