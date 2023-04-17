@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Surview | Naman Singhal</title>
+
+    <link href="./style.css" type="text/css" rel="stylesheet" />
+
+    <!-- Firebase SDK -->
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-analytics.js";
+      import {
+        getDatabase,
+        ref,
+        onValue,
+      } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAhK1Iv4GpHaBeGTaGbCwOPuQKWBxGcQ-U",
+        authDomain: "surview-f2327.firebaseapp.com",
+        databaseURL: "https://surview-f2327-default-rtdb.firebaseio.com",
+        projectId: "surview-f2327",
+        storageBucket: "surview-f2327.appspot.com",
+        messagingSenderId: "207123150741",
+        appId: "1:207123150741:web:385a613a26cf3a323e289c",
+        measurementId: "G-7BZ39VBJS3",
+      };
+
+      // Initialize Firebase
+      const firebaseApp = initializeApp(firebaseConfig);
+      const database = getDatabase(firebaseApp);
+      const analytics = getAnalytics(firebaseApp);
+
+      // Function to display the survey results
+      const surveysRef = ref(database, "surveys");
+      onValue(surveysRef, (snapshot) => {
+        const surveys = snapshot.val();
+        const surveyResults = document.getElementById("surveyResults");
+        surveyResults.innerHTML = "";
+        for (const key in surveys) {
+          const survey = surveys[key];
+          surveyResults.innerHTML += `<p>Name: ${survey.name}<br>Age: ${survey.age}<br>Email: ${survey.email}</p>`;
+        }
+      });
+    </script>
+  </head>
+
+  <body>
+	  <div class="survey-form">
+		  <a href="index.html">Back to /index</a>
+		  <h2 class="title"style="margin-top: 20px">Survey Results</h2>
+      <div id="surveyResults"></div>
+    </div>
+  </body>
+</html>
