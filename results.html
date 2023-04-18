@@ -45,19 +45,25 @@
           surveyResults.innerHTML += `<p>Name: ${survey.name}<br>Age: ${survey.age}<br>Email: ${survey.email}</p>`;
         }
         const mean = () => {
-          return ageArray.reduce((a, b) => a + b, 0) / ageArray.length;
+          let sum = 0;
+          for (let age of ageArray) {
+            sum += Number(age);
+          }
+          return sum / ageArray.length;
         };
         document.getElementById("meanHolder").innerHTML = `Mean: ${mean()}`;
         const median = () => {
           const sorted = ageArray.slice().sort((a, b) => a - b);
           const middle = Math.floor(sorted.length / 2);
           if (sorted.length % 2 === 0) {
-            return (sorted[middle - 1] + sorted[middle]) / 2;
+            return (Number(sorted[middle - 1]) + Number(sorted[middle])) / 2;
           } else {
-            return sorted[middle];
+            return Number(sorted[middle]);
           }
         };
-        document.getElementById("medianHolder").innerHTML = `Median: ${median()}`;
+        document.getElementById(
+          "medianHolder"
+        ).innerHTML = `Median: ${median()}`;
         const mode = () => {
           let frequency = {};
           let maxFreq = 0;
