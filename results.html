@@ -38,19 +38,59 @@
         const surveys = snapshot.val();
         const surveyResults = document.getElementById("surveyResults");
         surveyResults.innerHTML = "";
+        let ageArray = [];
         for (const key in surveys) {
           const survey = surveys[key];
+          ageArray.push(survey.age);
           surveyResults.innerHTML += `<p>Name: ${survey.name}<br>Age: ${survey.age}<br>Email: ${survey.email}</p>`;
         }
+        const mean = () => {
+          return ageArray.reduce((a, b) => a + b, 0) / ageArray.length;
+        };
+        document.getElementById("meanHolder").innerHTML = `Mean: ${mean()}`;
+        const median = () => {
+          const sorted = ageArray.slice().sort((a, b) => a - b);
+          const middle = Math.floor(sorted.length / 2);
+          if (sorted.length % 2 === 0) {
+            return (sorted[middle - 1] + sorted[middle]) / 2;
+          } else {
+            return sorted[middle];
+          }
+        };
+        document.getElementById("medianHolder").innerHTML = `Median: ${median()}`;
+        const mode = () => {
+          let frequency = {};
+          let maxFreq = 0;
+          let modes = [];
+
+          ageArray.forEach((num) => {
+            frequency[num] = (frequency[num] || 0) + 1;
+            if (frequency[num] > maxFreq) {
+              maxFreq = frequency[num];
+            }
+          });
+
+          for (let num in frequency) {
+            if (frequency[num] === maxFreq) {
+              modes.push(parseInt(num));
+            }
+          }
+          return modes;
+        };
+        document.getElementById("modeHolder").innerHTML = `Mode: ${mode()}`;
       });
     </script>
   </head>
 
   <body>
-	  <div class="survey-form">
-		  <a href="index.html">Back to /index</a>
-		  <h2 class="title"style="margin-top: 20px">Survey Results</h2>
+    <div class="survey-form">
+      <a href="index.html">Back to /index</a>
+      <h2 class="title" style="margin-top: 20px">Survey Results</h2>
       <div id="surveyResults"></div>
+      <h3>Stats</h3>
+      <h4 id="meanHolder"></h4>
+      <h4 id="medianHolder"></h4>
+      <h4 id="modeHolder"></h4>
     </div>
   </body>
 </html>
